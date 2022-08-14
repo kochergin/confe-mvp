@@ -1,0 +1,54 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Не очень секретная страница</title>
+    </head>
+    <body>
+        <presentation-nav page="iwanna"/>
+        <div class="container-fluid">
+            <div class="py-2">
+                <if(data.msg)>
+                    <div class="row">
+                        <div class="col-12 m-2 text-center">
+                            <div class="alert alert-primary" role="alert">${data.msg}</div> 
+                        </div> 
+                    </div> 
+                </if> 
+                <div class="row">
+                    <if(data.is_mod)>
+                        <div class="col-12 m-2 text-center">
+                            <p class="m-0">Больше не хотите быть модератором?</p> 
+                        </div> 
+                        <div class="col-12 m-2 text-center">
+                            <form>
+                                <input type="hidden" name="role" value="mod"/> 
+                                <input type="hidden" name="action" value="revoke"/> 
+                                <button class="btn btn-secondary" type="submit">Не хочу</button> 
+                            </form> 
+                        </div> 
+                    </if> 
+                    <else>
+                        <div class="col-12 m-2 text-center">
+                            <p class="m-0">Хотите быть модератором?</p> 
+                        </div> 
+                        <if(!data.is_mod)>
+                            <div class="col-12 m-2 text-center">
+                                <form>
+                                    <input type="hidden" name="role" value="mod"/> 
+                                    <input type="hidden" name="action" value="grant"/> 
+                                    <button class="btn btn-warning" type="submit">Хочу</button> 
+                                </form> 
+                            </div>
+                        </if> 
+                    </else> 
+                </div> 
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+	<button class="navbar-toggler rounded-0" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<a class="navbar-brand text-light"><small>Администрирование</small></a>
+
+	<div class="collapse navbar-collapse" id="navbarToggler">
+		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+			<li class=`nav-item ${input.page === 'schedule' ? 'active' : '' }`>
+				<a class="nav-link" href="/admin/schedule">Программа конференции</a>
+			</li>
+			<if(input.is_admin)>
+				<li class=`nav-item ${input.page === 'info' ? 'active' : '' }`>
+					<a class="nav-link" href="/admin/info">Общая информация</a>
+				</li>
+				<li class=`nav-item ${input.page === 'speakers' ? 'active' : '' }`>
+					<a class="nav-link" href="/admin/speakers">Наша команда</a>
+				</li>
+				<li class=`nav-item ${input.page === 'feedback' ? 'active' : '' }`>
+					<a class="nav-link" href="/admin/feedback">Обратная связь</a>
+				</li>
+				<li class=`nav-item ${input.page === 'settings' ? 'active' : '' }`>
+					<a class="nav-link" href="/admin/settings">Настройки</a>
+				</li>
+			</if>
+			<li class=`nav-item ${input.page === 'mod' ? 'active' : '' }`>
+				<a class="nav-link" href="/mod">Модераторская</a>
+			</li>
+		</ul>
+	</div>
+</nav>

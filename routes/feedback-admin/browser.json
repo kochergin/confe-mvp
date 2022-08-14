@@ -1,0 +1,7 @@
+{
+	"dependencies": [
+		"../browser.json",
+
+		"chart.js/dist/Chart.js"
+	]
+}

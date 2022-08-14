@@ -1,0 +1,32 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Модераторская</title>
+    </head>
+    <body>
+        <presentation-admin-nav page="mod" is_admin=data.is_admin/>
+        <div class="container">
+            <div class="py-2">
+                <mod-content
+                    fingerprint=data.fingerprint
+                    current_date_formatted=data.current_date_formatted
+                    current_time=data.current_time
+                    current_time_formatted=data.current_time_formatted
+                    current_utc_offset=data.current_utc_offset
+                    holding_current_event=data.holding_current_event
+                    overtime_formatted=data.overtime_formatted
+                    progress=data.progress
+                    current_event=data.current_event
+                    previous_events=data.previous_events
+                    next_event=data.next_event
+                    mod_questions=data.mod_questions/> 
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

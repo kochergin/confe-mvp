@@ -1,0 +1,373 @@
+<div class="fade show" key="adminSchedule">
+    <for|day, loop_daysIndex, loop_daysAll| of=state.admin_schedule>
+        <div key=`day_${day.date}`>
+            <div class="row no-gutters mt-2">
+                <div class="col-12">
+                    <div
+                        class="border text-uppercase p-2 ios-clickable"
+                        data-toggle="collapse"
+                        data-target=`#collapseAdminScheduleDay${loop_daysIndex + 1}`>
+                        ${day.date_formatted}<!-- <a href="#" class="badge badge-danger" on-click('deleteDay', day.date)>У</a>&nbsp;<a href="#" class="badge badge-warning" on-click('openEditDayForm', day.date)>Р</a>-->
+                    </div> 
+                </div> 
+            </div> 
+            <div class="collapse show" id=`collapseAdminScheduleDay${loop_daysIndex + 1}`>
+                <table class="table table-bordered small">
+                    <thead/> 
+                    <tbody>
+                        <tr class="gray-light">
+                            <th scope="col">Время</th> 
+                            <th scope="col">Тема</th> 
+                            <th scope="col" class="d-none d-sm-table-cell">Докладчик</th> 
+                            <th scope="col"/> 
+                        </tr> 
+                        <for|session| of=day.sessions>
+                            <tr class="bg-secondary">
+                                <td colspan="4">
+                                    <p class="m-0">
+                                        <if(session.extra_session)>
+                                            <span class="text-uppercase">(Дополнительная)</span> 
+                                        </if>
+                                        <if(!session.show_title)>
+                                            <span class="text-uppercase">(Скрытая)</span> 
+                                        </if>
+                                        <span class="text-uppercase">${session.title || "Без названия"}</span> 
+                                        
+                                        <!-- delete/edit session buttons-->
+                                        <if (input.is_admin)>
+                                            <a href="#" class="badge badge-danger" on-click("deleteSession", session._id)>У</a>&nbsp;<a href="#" class="badge badge-warning" on-click("openEditSessionForm", session._id)>Р</a>
+                                        </if>
+                                    </p>
+                                    <if(session.location)>
+                                        <p class="m-0">${session.location}</p>
+                                    </if>
+                                    <else>
+                                    </else>
+                                </td> 
+                            </tr> 
+                            <for|event| of=session.events>
+                                <tr class=event.type.rowClasses>
+                                    <th scope="row">
+                                        ${event.start_time_formatted} – ${event.end_time_formatted}
+                                    </th> 
+                                    <if(event.speaker_name)>
+                                        <td colspan="1" class="">
+                                            <span class=event.type.cellClasses>${event.title}</span>
+                                            <span class="d-inline d-sm-none">
+                                                <br/>
+                                                <br/>${event.speaker_name}${(event.speaker_hidden?' (скрытый)':'')}
+                                            </span>
+                                        </td>
+                                        <td colspan="1" class="d-none d-sm-table-cell">${event.speaker_name}${(event.speaker_hidden?' (скрытый)':'')}</td>
+                                    </if> 
+                                    <else>
+                                        <td colspan="2" class=`text-center ${event.type.cellClasses}`>
+                                            ${event.title}
+                                        </td> 
+                                    </else>
+                                    <td colspan="1" class="text-right">
+                                        <!-- delete/edit/questions event buttons-->
+                                        <if (input.is_admin)><a href="#" class="badge badge-danger" on-click("deleteEvent", event._id)>У</a>&nbsp;</if><a href="#" class="badge badge-warning" on-click("openEditEventForm", day.date, session._id, event._id)>Р</a><if(event.questions_allowed)>&nbsp;<a href=`/questions?event_id=${event._id}` target="_blank" class="badge badge-success">В</a></if>
+                                    </td> 
+                                </tr>
+                            </for>
+                            <if (input.is_admin)>
+                                <tr class="">
+                                    <td colspan="4" class="text-center">
+                                        <a href="#" class="text-success" on-click("openAddEventForm", day.date, session._id)>Добавить событие</a>
+                                    </td> 
+                                </tr>
+                            </if>
+                        </for>
+                        <if (input.is_admin)>
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                        <a href="#" class="text-success" on-click("openAddSessionForm", day.date)>Добавить сессию в этот день</a>
+                                </td>
+                            </tr>
+                        </if>
+                    </tbody> 
+                </table> 
+            </div> 
+        </div> 
+    </for>
+    <if (input.is_admin)>
+        <div class="px-3 py-2">
+            <a href="#" class="text-success" on-click("openAddSessionForm", null)>Добавить сессию в новый день</a> 
+        </div>
+    </if>
+</div>
+<div class="modal fade" id="editSessionForm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-0">
+            <form on-submit("submitEditSessionForm")>
+                <div class="modal-header">
+                    <h5 class="modal-title" key="editSessionFormTitle">...</h5> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span> 
+                    </button> 
+                </div> 
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="day_date">Дата:</label> 
+                        <input
+                            type="date"
+                            name="date"
+                            class="form-control"
+                            id="session_date"
+                            key="editSessionDateField"
+                            value=state.editing_session.date_input_formatted/> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="session_title">Название:</label> 
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            id="session_title"
+                            key="editSessionTitleField"
+                            value=state.editing_session.title/> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="session_location">Место:</label> 
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            id="session_location"
+                            key="editSessionLocationField"
+                            value=state.editing_session.location/> 
+                    </div> 
+                    <div class="custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="session_show_title"
+                            key="editSessionShowTitleCheckbox"
+                            checked=state.editing_session.show_title/> 
+                        <label class="custom-control-label" for="session_show_title">
+                            Показывать название сессии в расписании
+                        </label> 
+                    </div> 
+                    <div class="custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="session_extra_session"
+                            key="editSessionExtraCheckbox"
+                            checked=state.editing_session.extra_session/> 
+                        <label class="custom-control-label" for="session_extra_session">
+                            Сессия для дополнительной программы
+                        </label> 
+                    </div>
+                    <div class="form-group collapse" key="editSessionError">
+                        <div class="alert alert-danger mb-0 p-2" role="alert">
+                            <small><strong>Не удалось сохранить сессию.</strong> Проверьте введённые данные и попробуйте ещё раз.</small>
+                        </div>
+                    </div>
+                </div> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">
+                        Закрыть
+                    </button> 
+                    <button class="btn btn-success rounded-0">Сохранить</button> 
+                </div> 
+            </form> 
+        </div> 
+    </div>
+</div>
+<div class="modal fade" id="editEventForm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-0">
+            <form on-submit("submitEditEventForm")>
+                <div class="modal-header">
+                    <h5 class="modal-title" key="editEventFormTitle">...</h5> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span> 
+                    </button> 
+                </div> 
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="event_date">Дата:</label> 
+                        <select
+                            class="form-control"
+                            id="event_session"
+                            key="editEventDateSelectbox"
+                            on-change("editEventDateChange")>
+                            <for|day| of=state.admin_schedule>
+                                <option value=day._id selected=(day._id == state.editing_event_date)>
+                                    ${day.date_formatted}
+                                </option> 
+                            </for> 
+                        </select> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="event_session">Сессия:</label> 
+                        <select
+                            class="form-control"
+                            id="event_session"
+                            key="editEventSessionSelectbox"
+                            on-change("editEventSessionChange")>
+                            <for|session| of=state.current_sessions>
+                                <option
+                                    value=session._id
+                                    selected=(
+                                        session._id ==
+                                        state.editing_event_session_id
+                                    )>
+                                    ${session.extra_session
+                                    ? "(Доп. программа) "
+                                    : ""}${!session.show_title ? "(Скрытая) " : ""}${session.title || "Без названия"}
+                                </option> 
+                            </for> 
+                        </select> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="event_title">Название:</label> 
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            id="event_title"
+                            key="editEventTitleField"
+                            value=state.editing_event.title/> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="event_type">Тип:</label> 
+                        <select class="form-control" id="event_session" key="editEventTypeSelectbox">
+                            <for|ev_type| of=data.event_types>
+                                <option
+                                    value=ev_type._id
+                                    selected=(
+                                        ev_type._id ==
+                                        state.editing_event.type._id
+                                    )
+                                    class=(
+                                        ev_type.rowClasses +
+                                        " " +
+                                        ev_type.cellClasses
+                                    )>
+                                    ${ev_type.name}
+                                </option> 
+                            </for> 
+                        </select> 
+                    </div> 
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="event_start_time">Время начала:</label> 
+                                <input
+                                    type="time"
+                                    name="start_time"
+                                    class="form-control"
+                                    id="event_start_time"
+                                    key="editEventStartTimeField"
+                                    value=state.editing_event.start_time_formatted/> 
+                            </div> 
+                        </div> 
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="event_end_time">Время окончания:</label> 
+                                <input
+                                    type="time"
+                                    name="end_time"
+                                    class="form-control"
+                                    id="event_end_time"
+                                    key="editEventEndTimeField"
+                                    value=state.editing_event.end_time_formatted/> 
+                            </div> 
+                        </div> 
+                    </div> 
+                    <div class="form-group collapse" id="editEventSpeaker">
+                        <label for="event_speaker">Докладчик:</label> 
+                        <select
+                            class="form-control"
+                            id="event_speaker"
+                            key="editEventSpeakerSelectbox"
+                            on-change("editEventSpeakerChange")>
+                            <option
+                                value=""
+                                selected=(
+                                    !state.editing_event.speaker_link &&
+                                    !state.editing_event.speaker_name
+                                )>
+                                Нет докладчика
+                            </option> 
+                            <option
+                                value="custom-speaker"
+                                selected=(
+                                    !state.editing_event.speaker_link &&
+                                    state.editing_event.speaker_name
+                                )>
+                                Другой докладчик
+                            </option> 
+                            <for|speaker| of=state.current_speakers>
+                                <option
+                                    value=speaker.link
+                                    selected=(
+                                        speaker.link ==
+                                        state.editing_event.speaker_link
+                                    )>
+                                    ${speaker.name}${(speaker.hidden)?' (скрытый)':''}
+                                </option> 
+                            </for> 
+                        </select> 
+                    </div> 
+                    <div class="form-group collapse" id="editEventCustomSpeaker">
+                        <label for="event_custom_speaker">Другой докладчик:</label> 
+                        <input
+                            type="text"
+                            name="custom_speaker"
+                            class="form-control"
+                            id="event_custom_speaker"
+                            key="editEventCustomSpeakerField"
+                            value=state.editing_event.speaker_name/> 
+                    </div> 
+                    <div class="form-group collapse" id="editEventLocation">
+                        <label for="event_location">Место проведения:</label> 
+                        <input
+                            type="text"
+                            name="custom_speaker"
+                            class="form-control"
+                            id="event_location"
+                            key="editEventLocationField"
+                            value=state.editing_event.location/> 
+                    </div> 
+                    <div class="custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="event_questions_allowed"
+                            key="editEventQuestionsCheckbox"
+                            checked=state.editing_event.questions_allowed/> 
+                        <label class="custom-control-label" for="event_questions_allowed">
+                            Разрешить вопросы
+                        </label> 
+                    </div> 
+                    <div class="custom-control custom-checkbox">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="event_ratings_allowed"
+                            key="editEventRatingsCheckbox"
+                            checked=state.editing_event.ratings_allowed/> 
+                        <label class="custom-control-label" for="event_ratings_allowed">
+                            Разрешить ставить рейтинг
+                        </label> 
+                    </div>
+                    <div class="form-group collapse" key="editEventError">
+                        <div class="alert alert-danger mb-0 p-2" role="alert">
+                            <small><strong>Не удалось сохранить событие.</strong> Проверьте введённые данные и попробуйте ещё раз.</small>
+                        </div>
+                    </div>
+                </div> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">
+                        Закрыть
+                    </button> 
+                    <button class="btn btn-success rounded-0">Сохранить</button> 
+                </div> 
+            </form> 
+        </div> 
+    </div>
+</div>

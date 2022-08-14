@@ -1,0 +1,26 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Администрирование - программа конференции</title>
+    </head>
+    <body>
+        <presentation-admin-nav page="schedule" is_admin=data.is_admin/>
+        <div class="container-fluid">
+            <div class="py-2">
+                <schedule-admin-calendar
+                    fingerprint=data.fingerprint
+                    is_admin=data.is_admin
+                    admin_schedule=data.admin_schedule
+                    speakers=data.speakers
+                    event_types=data.event_types
+                /> 
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

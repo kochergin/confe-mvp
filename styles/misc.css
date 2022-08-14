@@ -1,0 +1,58 @@
+.gray-dark {
+	background-color: rgb(149,151,151) !important;
+}
+
+.gray-medium {
+	background-color: rgb(216,216,216) !important;
+}
+
+.gray-light {
+	background-color: rgb(242,242,242) !important;
+}
+
+.text-gray-dark {
+	color: #959797 !important;
+}
+
+.text-orange-warning {
+	color: #f79428 !important;
+}
+
+.ios-clickable {
+	cursor: pointer;
+}
+
+.condensed-text {
+	line-height: 1.2;
+}
+
+.align-row-middle td {
+	vertical-align: middle;
+}
+
+tr.collapsing {
+	transition: height 0s !important;
+}
+
+.schedule-day-header {
+	transition: color 0.35s;
+}
+
+.schedule-day-header:not(.collapsed) {
+	color: #004b8d !important;
+}
+
+.like-icon {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 106;
+}
+
+.icon-svg {
+	display: inline-block;
+}
+
+.feedbackCanvasContainers {
+	height: 40vh;
+	width: 100%;
+}

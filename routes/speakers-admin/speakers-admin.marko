@@ -1,0 +1,22 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Администрирование - команда</title>
+    </head>
+    <body>
+        <presentation-admin-nav page="speakers" is_admin=data.is_admin/>
+        <div class="container-fluid">
+            <div class="py-2">
+                <speakers-admin-content
+                    fingerprint=data.fingerprint
+                    admin_speakers=data.admin_speakers/> 
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

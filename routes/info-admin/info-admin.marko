@@ -1,0 +1,24 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Администрирование - Общая информация</title>
+    </head>
+    <body>
+        <presentation-admin-nav page="info" is_admin=data.is_admin/>
+        <div class="container-fluid">
+            <div class="py-2">
+                <info-admin-content
+                    fingerprint=data.fingerprint
+                    admin_extra_schedule=data.admin_extra_schedule
+                    admin_flights=data.admin_flights
+                    admin_contacts=data.admin_contacts/> 
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

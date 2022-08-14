@@ -1,0 +1,382 @@
+<div class="border border-primary mb-2">
+    <div class="row no-gutters">
+        <div class="col-12 bg-primary">
+            <p class="px-2 py-1 m-0 text-light text-uppercase">Модераторская</p> 
+        </div> 
+    </div>
+</div>
+<div class="m-0 p-0 show" key="currentEvent">
+    <if(state.current_event)>
+        <div class="border border-primary p-2 mb-2">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="h3 mb-0 text-center text-primary">
+                        ${(state.current_time_formatted ? state.current_time_formatted : data.current_time_formatted) || "..."}
+                    </div> 
+                </div> 
+                <div class="col-12">
+                    <div class="text-center">${data.current_date_formatted}</div> 
+                </div> 
+                <div class="col-12">
+                    <div class="">
+                        <div class="progress" style="height: 5px;">
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style=(
+                                    "width:" +
+                                    (state.progress
+                                        ? state.progress
+                                        : data.progress) +
+                                    "%"
+                                )
+                                aria-valuenow=`${
+                                    state.progress
+                                        ? state.progress
+                                        : data.progress
+                                }`
+                                aria-valuemin="0"
+                                aria-valuemax="100"/> 
+                        </div> 
+                    </div> 
+                </div>
+                <div class="w-100"/>
+                <div class="col-6">
+                    <p class="text-left m-0">${state.current_event.start_time_formatted}</p> 
+                </div> 
+                <div class="col-6">
+                    <p class="text-right m-0">${state.current_event.end_time_formatted}</p>
+                    <if(state.overtime_formatted)>
+                        <p class="text-right text-danger m-0">+ <b>${state.overtime_formatted}</b> мин</p>
+                    </if>
+                </div> 
+                <div class="w-100 mb-3"/> 
+                <div class="col-12">
+                    <p class="">
+                        <strong>${state.current_event.title}</strong>
+                    </p> 
+                    <if(state.current_event.speaker_name)>
+                        <p class="m-0">
+                            <if(state.current_event.speaker_link && !state.current_event.speaker_hidden)>
+                                <a
+                                    href=`speakers#${state.current_event.speaker_link}`
+                                    class="text-primary"
+                                    alt=`Докладчик: ${state.current_event.speaker_name}`>
+                                    <strong>${state.current_event.speaker_name}</strong>
+                                </a> 
+                            </if> 
+                            <else>
+                                <span class="text-primary">
+                                    <strong>${state.current_event.speaker_name}</strong>
+                                </span> 
+                            </else> 
+                        </p> 
+                    </if> 
+                </div>
+                <div class="w-100"/> 
+                <div class="col-12 mt-2 text-center">
+                    <if(state.holding_current_event)>
+                        <button class="btn btn-warning text-uppercase" on-click("unholdEvent")>
+                            Вернуться к расписанию
+                        </button>
+                    </if>
+                    <else>
+                        <button class="btn btn-danger text-uppercase" on-click("holdEvent")>
+                            Приостановить событие
+                        </button>
+                    </else>
+                </div>
+            </div> 
+        </div> 
+        <if(state.current_event.questions_allowed)>
+            <div class="row no-gutters pt-2 collapse" key="questionCannotBeSent">
+                <div class="col-12">
+                    <div class="alert alert-info mb-0 p-2" role="alert">
+                        <small>К сожалению, сейчас отсутсвует подключение к серверу.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="m-0 pt-2 fade show" key="questions">
+                <if(state.mod_questions.length)>
+                    <for|status| of=['top', 'new', 'accepted', 'answered', 'rejected']>
+                        <if(status == "top")>
+                            <div class="mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="px-2 py-1 m-0 text-info text-uppercase"><strong>Задаваемый</strong></p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </if>
+                        <if(status == "new")>
+                            <div class="mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="px-2 py-1 m-0 text-primary text-uppercase"><strong>Новые</strong></p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </if>
+                        <if(status == "accepted")>
+                            <div class="mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="px-2 py-1 m-0 text-success text-uppercase"><strong>Одобренные</strong></p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </if>
+                        <if(status == "answered")>
+                            <div class="mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="px-2 py-1 m-0 text-secondary text-uppercase"><strong>Отвеченные</strong></p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </if>
+                        <if(status == "rejected")>
+                            <div class="mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="px-2 py-1 m-0 text-danger text-uppercase"><strong>Отклоненные</strong></p> 
+                                    </div>
+                                </div>
+                            </div>
+                        </if>
+                        $ const statusQuestions = state.mod_questions.filter((q) => q.status == status);
+                        <if(statusQuestions.length)>
+                            <div class="border border-primary p-2 mb-2">
+                                <for|question, loopIndex, loopAll| of=statusQuestions>
+                                    <div class="collapse show" key=`question_${question._id}`>
+                                        <div class="row no-gutters">
+                                            <div class="col-12">
+                                                <p class="m-0 px-1 pb-1 h5">
+                                                    ${question.text}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row no-gutters">
+                                            <div class="col-6 order-1 col-sm-3 order-sm-1 p-1">
+                                                <if(question.status != "rejected")>
+                                                    <button class="btn btn-outline-danger btn-block text-truncate" on-click("setQuestionStatus", question._id, "rejected")>
+                                                        Отклонить
+                                                    </button>
+                                                </if>
+                                            </div>
+                                            <div class="col-4 order-4 col-sm-2 order-sm-2 p-1">
+                                                <button class="btn btn-outline-warning btn-block text-truncate" on-click("editQuestion", question._id)>
+                                                    ✎
+                                                </button>
+                                            </div>
+                                            <div class="col-6 order-2 col-sm-3 order-sm-3 p-1">
+                                                <if(question.status != "accepted")>
+                                                    <button class="btn btn-outline-success btn-block text-truncate" on-click("setQuestionStatus", question._id, "accepted")>
+                                                        Одобрить
+                                                    </button>
+                                                </if>
+                                            </div>
+                                            <div class="col-4 order-3 col-sm-2 order-sm-4 p-1">
+                                                <if(question.status != "answered")>
+                                                    <button class="btn btn-outline-secondary btn-block text-truncate text-reset" on-click("setQuestionStatus", question._id, "answered")>
+                                                        ✓
+                                                    </button>
+                                                </if>
+                                            </div>
+                                            <div class="col-4 order-5 col-sm-2 order-sm-5 p-1">
+                                                <if(question.status != "top")>
+                                                    <button class="btn btn-outline-info btn-block text-truncate" on-click("sendQuestionToTop", question._id)>
+                                                        ▲
+                                                    </button>
+                                                </if>
+                                            </div>
+                                        </div>
+                                        <if(!(loopIndex === loopAll.length - 1))>
+                                            <hr style="margin-top: 0.5rem; margin-bottom: 0.5rem;"/>
+                                        </if>
+                                    </div> 
+                                </for>
+                            </div>
+                        </if>
+                        <else>
+                            <div class="border border-primary p-2 mb-2">
+                                <div class="row no-gutters">
+                                    <div class="col-12">
+                                        <p class="m-0 text-center text-muted">
+                                            Вопросов ещё нет
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </else>
+                    </for>
+                </if> 
+                <else>
+                    <div class="border border-primary p-2 mb-2">
+                        <div class="row no-gutters">
+                            <div class="col-12">
+                                <p class="m-0 text-center">
+                                    <strong>Вопросов пока нет.<br/>Но могут появиться в любой момент!</strong>
+                                </p> 
+                            </div> 
+                        </div>
+                    </div>
+                </else> 
+            </div>
+        </if> 
+        <else>
+            <div class="border border-primary p-2 mb-2">
+                <div class="m-0 pt-2 fade show" key="questions">
+                    <div class="row no-gutters">
+                        <div class="col-12">
+                            <p class="m-0 text-center">
+                                <strong>Вопросы к данному событию не предусмотрены.</strong>
+                            </p> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </else> 
+    </if> 
+    <else>
+        <div class="border border-primary p-2 mb-2">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="h3 mb-0 text-center text-primary">${data.time || "..."}</div> 
+                </div> 
+                <div class="col-12">
+                    <div class="text-center">${data.date}</div> 
+                </div> 
+                <div class="w-100 mb-3"/> 
+                <div class="col-12">
+                    <p class="text-uppercase text-center">
+                        <strong>Сейчас событий нет</strong>
+                    </p> 
+                </div> 
+            </div> 
+        </div> 
+    </else>
+</div>
+<if(state.previous_events && state.previous_events.length)>
+	<div class="border border-primary mb-2">
+		<div class="row no-gutters">
+			<div class="col-12 bg-primary">
+				<p class="px-2 py-1 m-0 text-light text-uppercase">
+					Вопросы к предыдущим событиям сегодня
+				</p> 
+			</div> 
+		</div> 
+	</div> 
+	<div class="border border-primary mb-2">
+		<div class="row no-gutters">
+			<div class="col-12">
+				<div class="list-group list-group-flush">
+					<for|previous_event| of=state.previous_events>
+						<a href=`/questions?event_id=${previous_event._id}` target="_blank" class="list-group-item list-group-item-action">
+							${previous_event.title}
+						</a>
+					</for> 
+				</div> 
+			</div> 
+		</div> 
+	</div> 
+</if>
+<if(state.next_event)>
+    <div class="border border-primary mb-2">
+        <div class="row no-gutters">
+            <div class="col-12 bg-primary">
+                <p class="px-2 py-1 m-0 text-light text-uppercase">Следующее событие</p> 
+            </div> 
+        </div> 
+    </div> 
+    <div class="border border-primary p-2 mb-2">
+        <div class="row no-gutters">
+            <div class="col-12">
+                <div class="h3 mb-0 text-center text-primary">
+                    ${state.next_event.start_time_formatted}
+                </div> 
+            </div> 
+            <div class="col-12">
+                <div class="text-center">${state.next_event.date}</div> 
+            </div> 
+            <div class="w-100 mb-3"/> 
+            <div class="col-12">
+                <p class="">
+                    <strong>${state.next_event.title}</strong>
+                </p> 
+                <if(state.next_event.speaker_name)>
+                    <p class="m-0">
+                        <if(state.next_event.speaker_link && !state.next_event.speaker_hidden)>
+                            <a
+                                href=`b-speakers.html#${state.next_event.speaker_link}`
+                                class="text-primary"
+                                alt=`Докладчик: ${state.next_event.speaker_name}`>
+                                <strong>${state.next_event.speaker_name}</strong>
+                            </a> 
+                        </if> 
+                        <else>
+                            <span class="text-primary">
+                                <strong>${state.next_event.speaker_name}</strong>
+                            </span> 
+                        </else> 
+                    </p> 
+                </if> 
+            </div> 
+        </div> 
+    </div>
+</if>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="questionEditingModalHeader" aria-hidden="true" key="questionEditingModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form on-submit("sendQuestionEditingForm")>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="questionEditingModalHeader">Редактирование вопроса</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control my-2" key="questionEditingTextarea" rows="3"/>
+                </div> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button class="btn btn-success">Сохранить и отправить</button> 
+                </div> 
+            </form> 
+        </div> 
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" key="topQuestionConfirmation">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" aria-hidden="true">Много задаваемых вопросов</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>В задаваемых уже есть вопрос, какой статус ему присвоить?</p>
+            </div> 
+            <div class="modal-footer">
+                <div class="container no-gutters p-0">
+                    <div class="row">
+                        <div class="col-6 col-sm-4 order-sm-2 p-1">
+                            <button type="button" class="btn btn-secondary btn-block" on-click("setTopQuestionStatus", "answered")>Отвеченный</button>
+                        </div>
+                        <div class="col-6 col-sm-4 order-sm-3 p-1">
+                            <button type="button" class="btn btn-success btn-block" on-click("setTopQuestionStatus", "accepted")>Одобренный</button>
+                        </div>
+                        <div class="col-12 col-sm-4 order-sm-1 p-1">
+                            <button type="button" class="btn btn-light btn-block" data-dismiss="modal">
+                                Закрыть
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div>
+</div>

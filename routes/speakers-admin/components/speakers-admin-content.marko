@@ -1,0 +1,144 @@
+<div class="row no-gutters" key="speakers">
+    <div class="col-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>№ п/п</th> 
+                    <th>Имя</th> 
+                    <th>Департамент</th> 
+                    <th>Позиция</th> 
+                    <th>Фото</th> 
+                    <th/> 
+                </tr> 
+            </thead> 
+            <tbody>
+                <for|speaker| of=data.admin_speakers>
+                    <tr class=(speaker.hidden?'table-secondary':null)>
+                        <td class="align-right">${speaker.order_num}</td> 
+                        <td class="align-middle">${speaker.name}</td> 
+                        <td class="align-middle">${speaker.department}</td> 
+                        <td class="align-middle">${speaker.position}</td> 
+                        <td class="align-middle">
+                            <if(speaker.photo)>
+                                <img
+                                    src=`/photos/${speaker.photo}`
+                                    class="img-fluid"
+                                    alt=`${speaker.name}`
+                                    width="32"
+                                    height="32"/> 
+                            </if> 
+                            <else>Нет фото</else> 
+                        </td> 
+                        <td class="align-middle">
+                            <a href="#" class="badge badge-danger" on-click("deleteSpeaker", speaker.link)>У</a>
+                            <if(speaker.hidden)>&nbsp;<a href="#" class="badge badge-success" on-click("showSpeaker", speaker.link)>П</a>&nbsp;</if>
+                            <else>&nbsp;<a href="#" class="badge badge-info" on-click("hideSpeaker", speaker.link)>С</a>&nbsp;</else>
+                            <a href="#" class="badge badge-warning" on-click("openEditSpeakerForm", speaker.link)>Р</a>
+                        </td> 
+                    </tr> 
+                </for> 
+                <tr>
+                    <td colspan="6">
+                        <a class="text-success" on-click("openAddNewSpeakerForm")>
+                            Добавить докладчика
+                        </a>
+                    </td> 
+                </tr> 
+            </tbody> 
+        </table> 
+    </div>
+</div>
+<div class="modal fade" id="editSpeakerForm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-0">
+            <form on-submit("submitEditSpeakerForm") key="editSpeakerForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" key="editSpeakerFormTitle">...</h5> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span> 
+                    </button> 
+                </div> 
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12 col-sm-1">
+                            <div class="form-group">
+                                <label for="contact_order_number">№ п/п</label> 
+                                <input
+                                    type="text"
+                                    name="order_num"
+                                    class="form-control"
+                                    id="order_number"
+                                    value=state.editing_speaker.order_num/> 
+                            </div> 
+                        </div> 
+                        <div class="col-12 col-sm-11">
+                            <div class="form-group">
+                                <label for="speaker_name">Имя:</label> 
+                                <input
+                                    type="text"
+                                    name="name"
+                                    class="form-control"
+                                    id="speaker_name"
+                                    value=state.editing_speaker.name/> 
+                            </div> 
+                        </div> 
+                    </div>
+					<div class="form-group">
+						<div class="custom-control custom-checkbox">
+							<input class="custom-control-input" type="checkbox" id="speaker_is_hidden" name="hidden" checked=state.editing_speaker.hidden>
+							<label class="custom-control-label" for="speaker_is_hidden">
+								Скрыть докладчика из списка и скрыть ссылку на него в докладах
+							</label>
+						</div>
+					</div>
+                    <div class="form-group">
+                        <label for="speaker_department">Департамент:</label> 
+                        <input
+                            type="text"
+                            name="department"
+                            class="form-control"
+                            id="speaker_department"
+                            value=state.editing_speaker.department/> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="speaker_position">Позиция:</label> 
+                        <input
+                            type="text"
+                            name="position"
+                            class="form-control"
+                            id="speaker_position"
+                            value=state.editing_speaker.position/> 
+                    </div> 
+                    <div class="form-group">
+                        <label for="speaker_biography">Биография:</label> 
+                        <textarea name="biography" class="form-control" id="speaker_biography" rows="5">${state.editing_speaker.biography}</textarea> 
+                    </div> 
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input
+                                type="file"
+                                class="custom-file-input"
+                                id="speaker_photo"
+                                name="photo"
+                                on-change("editSpeakerPhotoChange")/> 
+                            <label class="custom-file-label" for="speaker_photo" key="editSpeakerPhotoLabel">
+                                ${state.editing_speaker.photo
+                                ? "Фото уже загружено"
+                                : "Выберите фото для загрузки"}
+                            </label> 
+                        </div> 
+                    </div> 
+                    <div class="collapse" id="editSpeakerError">
+                        <div class="alert alert-danger" role="alert" id="editSpeakerErrorContent"/> 
+                    </div> 
+                </div> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">
+                        Закрыть
+                    </button> 
+                    <button class="btn btn-success rounded-0">Сохранить</button> 
+                </div> 
+            </form> 
+        </div> 
+    </div>
+</div>

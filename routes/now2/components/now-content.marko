@@ -1,0 +1,285 @@
+<div class="border border-primary mb-2">
+    <div class="row no-gutters">
+        <div class="col-12 bg-primary">
+            <p class="px-2 py-1 m-0 text-light text-uppercase">Сейчас</p> 
+        </div> 
+    </div>
+</div>
+<div class="m-0 p-0 show" key="currentEvent">
+    <if(data.current_event)>
+        <div class="border border-primary p-2 mb-2">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="h3 mb-0 text-center text-primary">
+                        ${(state.current_time_formatted
+                        ? state.current_time_formatted
+                        : data.current_time_formatted) || "..."}
+                    </div> 
+                </div> 
+                <div class="col-12">
+                    <div class="text-center">${data.current_date_formatted}</div> 
+                </div> 
+                <div class="col-12">
+                    <div class="">
+                        <div class="progress" style="height: 5px;">
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style=(
+                                    "width:" +
+                                    (state.progress
+                                        ? state.progress
+                                        : data.progress) +
+                                    "%"
+                                )
+                                aria-valuenow=`${
+                                    state.progress
+                                        ? state.progress
+                                        : data.progress
+                                }`
+                                aria-valuemin="0"
+                                aria-valuemax="100"/> 
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="w-100"/> 
+                <div class="col-6">
+                    <p class="text-left m-0">${data.current_event.start_time_formatted}</p> 
+                </div> 
+                <div class="col-6">
+                    <p class="text-right m-0">${data.current_event.end_time_formatted}</p> 
+                </div> 
+                <div class="w-100 mb-3"/> 
+                <div class="col-12">
+                    <p class="">
+                        <strong>${data.current_event.title}</strong>
+                    </p> 
+                    <if(data.current_event.speaker_name)>
+                        <p class="m-0">
+                            <if(data.current_event.speaker_link)>
+                                <a
+                                    href=`speakers#${data.current_event.speaker_link}`
+                                    class="text-primary"
+                                    alt=`Докладчик: ${data.current_event.speaker_name}`>
+                                    <strong>${data.current_event.speaker_name}</strong>
+                                </a> 
+                            </if> 
+                            <else>
+                                <span class="text-primary">
+                                    <strong>${data.current_event.speaker_name}</strong>
+                                </span> 
+                            </else> 
+                        </p> 
+                    </if> 
+                </div> 
+            </div> 
+        </div> 
+        <if(data.current_event.ratings_allowed)>
+            <div class="border border-primary p-2 mb-2">
+                <form key="ratingForm" on-submit("sendRatingForm", data.current_event._id)>
+                    <div class="row no-gutters">
+                        <div class="col-12">
+                            <p class="m-0">
+                                <span class="text-uppercase">Оцените доклад</span>
+                            </p> 
+                            <p class="">
+                                <small class="text-muted">(пожалуйста оцените по пятибалльной шкале, где 5 – высший балл)</small>
+                            </p> 
+                            <for|rating| from=1 to=5>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input
+                                        type="radio"
+                                        id=`eventRating${rating}`
+                                        name="eventRating"
+                                        class="custom-control-input"
+                                        checked=(data.current_event.rating == rating)
+                                        value=`${rating}`/> 
+                                    <label class="custom-control-label" for=`eventRating${rating}`>
+                                        ${rating}
+                                    </label> 
+                                </div> 
+                            </for> 
+                        </div> 
+                    </div> 
+                    <div class="row no-gutters pt-2">
+                        <div class="col-12">
+                            <button
+                                class="btn btn-outline-primary float-right rounded-0"
+                                type="submit"
+                                key="ratingSendButton">
+                                Отправить
+                            </button> 
+                        </div> 
+                    </div> 
+                </form> 
+            </div> 
+        </if> 
+        <if(data.current_event.questions_allowed)>
+            <div class="border border-primary p-2 mb-2">
+                <div class="row no-gutters">
+                    <div class="col-12">
+                        <p class="text-uppercase m-0">Задать вопрос</p> 
+                        <form on-submit("sendQuestionForm", data.current_event._id)>
+                            <textarea
+                                class="form-control my-2"
+                                id="exampleFormControlTextarea1"
+                                key="questionText"
+                                rows="2"
+                                placeholder="Текст вопроса"/> 
+                            <button
+                                class="btn btn-outline-primary float-right rounded-0"
+                                type="submit"
+                                key="questionSendButton">
+                                Отправить
+                            </button> 
+                        </form> 
+                    </div> 
+                </div> 
+                <div class="row no-gutters pt-2 collapse" key="questionSentSuccess">
+                    <div class="col-12">
+                        <div class="alert alert-success rounded-0 mb-0 p-2" role="alert">
+                            <small>Спасибо! Ваш вопрос успешно отправлен. Он будет добавлен в список вопросов, как только пройдёт модерацию.</small>
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="row no-gutters pt-2 collapse" key="questionRejected">
+                    <div class="col-12">
+                        <div class="alert alert-warning rounded-0 mb-0 p-2" role="alert">
+                            <small>Один из заданных вами вопросов был отклонён модератором.</small>
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="row no-gutters pt-2 collapse" key="questionCannotBeSent">
+                    <div class="col-12">
+                        <div class="alert alert-info rounded-0 mb-0 p-2" role="alert">
+                            <small>К сожалению, сейчас отсутсвует подключение к серверу и ваш вопрос не может быть отправлен.</small>
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="m-0 pt-2 fade show" key="questions">
+                    <if(data.current_questions.length)>
+                        <for|question, loopIndex, loopAll| of=data.current_questions>
+                            <div class="row no-gutters pt-2">
+                                <div class=`col-3 col-sm-2 col-lg-1${(question.owned
+                                    ? " text-orange-warning"
+                                    : "") +
+                                    (question.voted && !question.owned
+                                        ? " text-success"
+                                        : "")}`>
+                                    <div
+                                        class="mx-auto ios-clickable"
+                                        style="width: 3rem; height: 3rem;"
+                                        on-click(
+                                            "questionVote",
+                                            question._id,
+                                            question.voted,
+                                            question.owned
+                                        )>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="128"
+                                            height="128"
+                                            viewBox="0 0 4000 4000"
+                                            class="like-icon d-inline-block w-100 h-100">
+                                            <path d="M820 1759c186-13 370 16 524-8l-4 1551c-72 128-361 185-487 122-64-31-117-86-139-147-63-178 33-479 27-763-5-232-119-447-110-637 6-129 76-110 189-118zm194 1412c27 0 50 22 50 50 0 28-23 50-50 50-28 0-50-22-50-50 0-28 22-50 50-50zm330-1420c426-67 537-512 559-878 5-91-1-159 39-245 146-321 616 41 340 955-31 101 0 77 121 72 277-12 640-97 827-11 219 100 238 273 63 492-38 48-33 31 16 79 159 156 162 224-56 423-49 45-38 21-18 78 74 213-10 265-169 365-51 31-44 21-34 78 29 179 22 276-206 287-769 34-993 94-1486-144l4-1551z"/> 
+                                        </svg> 
+                                    </div> 
+                                    <p class="text-center">${question.voters_count}</p> 
+                                </div> 
+                                <div class="col-9 col-sm-10 col-lg-11">
+                                    <div class=`${
+                                        question.accepted ? "" : "bg-secondary"
+                                    }`>
+                                        <p class="m-0">
+                                            <strong>${question.text}</strong>
+                                        </p> 
+                                    </div> 
+                                </div> 
+                            </div> 
+                            <if(!(loopIndex === loopAll.length - 1))>
+                                <hr style="margin-top: 0.5rem; margin-bottom: 0.5rem;"/> 
+                            </if> 
+                        </for> 
+                    </if> 
+                    <else>
+                        <div class="row no-gutters">
+                            <div class="col-12">
+                                <p class="m-0 text-center">
+                                    <strong>Вопросов пока нет.<br/>Ваш может стать первым!</strong>
+                                </p> 
+                            </div> 
+                        </div> 
+                    </else> 
+                </div> 
+            </div> 
+        </if> 
+    </if> 
+    <else>
+        <div class="border border-primary p-2 mb-2">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div class="h3 mb-0 text-center text-primary">
+                        ${(state.current_time_formatted
+                        ? state.current_time_formatted
+                        : data.current_time_formatted) || "..."}
+                    </div> 
+                </div> 
+                <div class="col-12">
+                    <div class="text-center">${data.current_date_formatted}</div> 
+                </div> 
+                <div class="w-100 mb-3"/> 
+                <div class="col-12">
+                    <p class="text-uppercase text-center">
+                        <strong>Сейчас событий нет</strong>
+                    </p> 
+                </div> 
+            </div> 
+        </div> 
+    </else>
+</div>
+<if(data.next_event)>
+    <div class="border border-primary mb-2">
+        <div class="row no-gutters">
+            <div class="col-12 bg-primary">
+                <p class="px-2 py-1 m-0 text-light text-uppercase">Следующее событие</p> 
+            </div> 
+        </div>
+    </div>
+    <div class="border border-primary p-2 mb-2">
+        <div class="row no-gutters">
+            <div class="col-12">
+                <div class="h3 mb-0 text-center text-primary">
+                    ${(state.next_event.current_time_formatted
+                    ? state.next_event.current_time_formatted
+                    : data.next_event.current_time_formatted) || "..."}
+                </div> 
+            </div> 
+            <div class="col-12">
+                <div class="text-center">${data.next_event.current_date_formatted}</div> 
+            </div> 
+            <div class="w-100 mb-3"/> 
+            <div class="col-12">
+                <p class="">
+                    <strong>${data.next_event.title}</strong>
+                </p> 
+                <if(data.next_event.speaker_name)>
+                    <p class="m-0">
+                        <if(data.next_event.speaker_link)>
+                            <a
+                                href=`b-speakers.html#${data.next_event.speaker_link}`
+                                class="text-primary"
+                                alt=`Докладчик: ${data.next_event.speaker_name}`>
+                                <strong>${data.next_event.speaker_name}</strong>
+                            </a> 
+                        </if> 
+                        <else>
+                            <span class="text-primary">
+                                <strong>${data.next_event.speaker_name}</strong>
+                            </span> 
+                        </else> 
+                    </p> 
+                </if> 
+            </div> 
+        </div>
+    </div>
+</if>

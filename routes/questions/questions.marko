@@ -1,0 +1,22 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Вопросы - ${data.settings.header}</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="m-0 py-2">
+                <questions-content
+                    fingerprint=data.fingerprint
+                    current_questions=data.current_questions
+                />
+            </div>
+        </div>
+        <browser-refresh/>
+    </body>
+</html>

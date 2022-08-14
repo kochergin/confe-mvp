@@ -1,0 +1,7 @@
+#nojs .collapse, #nojs .nojs-show, #js .nojs-hide {
+	display: block;
+}
+
+#nojs .nojs-hide, #js .nojs-show {
+	display: none !important;
+}

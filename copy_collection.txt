@@ -1,0 +1,2 @@
+mongodump --db=presentation --collection=speakers --archive=dump.tsv
+mongorestore --nsInclude=presentation.* --nsFrom presentation.* --nsTo ruc2019.* --archive=dump.tsv

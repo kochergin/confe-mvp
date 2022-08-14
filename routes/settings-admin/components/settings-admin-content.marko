@@ -1,0 +1,86 @@
+<div class="border border-primary my-2">
+    <div class="row no-gutters">
+        <div class="col-12 bg-primary">
+            <p class="px-2 py-1 m-0 text-light text-uppercase">
+                Общие настройки сайта
+            </p> 
+        </div> 
+    </div>
+</div>
+<div class="border p-2 mb-2 collapse show" key="siteSettings">
+	<form on-submit("submitEditSiteSettingsForm")>
+		<div class="form-group row"> <!-- header -->
+			<label for="site_header" class="col-sm-2 col-form-label">Заголовок сайта</label> 
+			<div class="col-sm-10">
+				<input
+					type="text"
+					name="site_header"
+					class="form-control"
+					id="site_header"
+					key="editSiteSettingsHeaderField"
+					value=`${data.site_settings.header}`/>
+				<small class="form-text text-muted">Текст, который будет отображаться в браузере в закладках и т.п.</small>
+			</div>
+		</div>
+		<div class="form-group row"> <!-- home_header -->
+			<label for="site_home_header" class="col-sm-2 col-form-label">Приветствие</label> 
+			<div class="col-sm-10">
+				<textarea class="form-control my-2" key="editSiteSettingsHomeHeaderField" rows="3">${data.site_settings.home_header}</textarea>
+				<small class="form-text text-muted">Приветствие будет отображаться на главной странице.</small>
+			</div>
+		</div>
+		<div class="form-group row"> <!-- home_description -->
+			<label for="site_home_description" class="col-sm-2 col-form-label">Слоган</label> 
+			<div class="col-sm-10">
+				<textarea class="form-control my-2" key="editSiteSettingsHomeDescriptionField" rows="3">${data.site_settings.home_description}</textarea>
+				<small class="form-text text-muted">Слоган будет отображаться на главной странице сразу под приветствием.</small>
+			</div>
+		</div>
+		<div class="form-group row"> <!-- footer_enable -->
+			<div class="col-sm-2">Отображение "подвала"</div> 
+			<div class="col-sm-10">
+				<div class="form-check">
+					<input
+						type="checkbox"
+						class="form-check-input"
+						id="site_footer_enabled" 
+						key="editSiteSettingsFooterCheckbox"
+						checked=data.site_settings.footer_enable
+					>
+					<label class="form-check-label" for="site_footer_enabled">
+						Включить "подвал"
+					</label>
+				</div>
+				<small class="form-text text-muted">"Подвал" отображается в нижней части сайта.</small>
+			</div>
+		</div>
+		<div class="form-group row"> <!-- footer_text -->
+			<label for="site_footer_text" class="col-sm-2 col-form-label">Содержимое "подвала"</label> 
+			<div class="col-sm-10">
+				<textarea class="form-control my-2" key="editSiteFooterField" rows="3">${data.site_settings.footer_text}</textarea>
+				<small class="form-text text-muted">Текст, который будет отображаться в "подвале", если тот будет включен.</small>
+			</div>
+		</div>
+		<div class="form-group row"> <!-- timezone -->
+			<label for="site_timezone" class="col-sm-2 col-form-label">Временная зона</label> 
+			<div class="col-sm-10">
+				<select
+					class="form-control"
+					id="site_timezone"
+					key="editSiteSettingsTimezoneSelectbox">
+					<for|timezone| of=data.available_timezones>
+						<option value=timezone.name selected=(timezone.name == data.site_settings.timezone)>
+							${timezone.name} (${(timezone.offset >= 0)?'+'+timezone.offset:timezone.offset})
+						</option> 
+					</for> 
+				</select> 
+				<small class="form-text text-muted">Временная зона, которая будет использована на сайте.</small>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-10">
+				<button type="submit" class="btn btn-primary">Сохранить</button>
+			</div>
+		</div>
+	</form>
+</div>

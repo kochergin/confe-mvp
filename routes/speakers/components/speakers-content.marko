@@ -1,0 +1,68 @@
+<div class="border border-primary mb-2">
+    <div class="row no-gutters">
+        <div class="col-12 bg-primary">
+            <p class="px-2 py-1 m-0 text-light text-uppercase">Наша команда</p> 
+        </div> 
+    </div>
+</div>
+<for|speaker, loopIndex, loopAll| of=state.speakers>
+	<if(!speaker.hidden)>
+		<div
+			class=`border border-primary mb-1${
+				speaker.biography ? " ios-clickable" : ""
+			}`
+			id=`${speaker.link}`
+			data-toggle=(speaker.biography ? "collapse" : null)
+			data-target=(speaker.biography ? `#bio-${speaker.link}` : null)>
+			<div class="row no-gutters">
+				<div class="col-12 p-2">
+					<div class="row no-gutters">
+						<div class="col-8 col-sm-9 col-lg-10 col-xl-11 mb-3">
+							<div>
+								<span class="h4 text-primary">${speaker.name}</span> 
+							</div> 
+							<div class="mt-2 mt-m-3 mt-lg-4">
+								<strong>${speaker.position}</strong>
+							</div> 
+							<div>
+								<span class="small text-muted">${speaker.department}</span> 
+							</div> 
+						</div> 
+						<div class="col-4 col-sm-3 col-lg-2 col-xl-1">
+							<if(speaker.photo)>
+								<div class="text-right pl-2">
+									<img src=`/photos/${speaker.photo}` class="img-fluid" alt=`${speaker.name}`/> 
+								</div> 
+							</if> 
+							<!--<else>
+								<div class="text-right pl-2">
+									<img src="/images/q.png" class="img-fluid" alt="${speaker.name}" />
+								</div>
+							</else>-->
+						</div> 
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		<if(speaker.biography)>
+			<div class="border border-primary mb-2">
+				<div class="row no-gutters">
+					<div class="col-12 p-2">
+						<p
+							class="text-uppercase m-0 ios-clickable"
+							data-toggle="collapse"
+							data-target=`#bio-${speaker.link}`>
+							<strong>Краткая биография</strong>
+						</p> 
+						<p id=`bio-${speaker.link}` class="small collapse mt-2">
+							$!{speaker.biography}
+						</p> 
+					</div> 
+				</div> 
+			</div> 
+		</if> 
+		<if(!(loopIndex === loopAll.length - 1))>
+			<hr/>
+		</if>
+	</if>
+</for>

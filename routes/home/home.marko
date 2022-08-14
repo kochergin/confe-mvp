@@ -1,0 +1,80 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>${data.settings.header}</title>
+    </head>
+    <body>
+        <presentation-nav page="home"/>
+        <div class="container">
+            <div class="py-2">
+                <div class="row">
+                    <div class="col-12 my-2 text-center">
+                        $!{data.settings.home_header}
+                        <p class="text-muted">$!{data.settings.home_description}</p> 
+                    </div> 
+                    <div class="col-12 my-2 text-center">
+                        <div class="card-columns">
+                            <a href="/now">
+                                <div class="card border-primary rounded-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-uppercase text-primary">Сейчас</h5> 
+                                        <p class="card-text text-muted condensed-text">
+                                            Информация о текущем выступлении и возможность задать вопрос спикеру напрямую.
+                                        </p> 
+                                    </div> 
+                                </div> 
+                            </a> 
+                            <a href="/schedule">
+                                <div class="card border-primary rounded-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-uppercase text-body">Программа конференции</h5> 
+                                        <p class="card-text text-muted condensed-text">
+                                            Расписание основных событий конференции.
+                                        </p> 
+                                    </div> 
+                                </div> 
+                            </a> 
+                            <a href="/info">
+                                <div class="card border-primary rounded-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-uppercase text-body">Общая информация</h5> 
+                                        <p class="card-text text-muted condensed-text">
+                                            Дополнительная программа, контакты<!--, рейсы, прилёты, вылеты-->.
+                                        </p> 
+                                    </div> 
+                                </div> 
+                            </a> 
+                            <a href="/speakers">
+                                <div class="card border-primary rounded-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-uppercase text-body">Наша команда</h5> 
+                                        <p class="card-text text-muted condensed-text">
+                                            Информация и краткая биография.
+                                        </p> 
+                                    </div> 
+                                </div> 
+                            </a> 
+                            <a href="/feedback">
+                                <div class="card border-primary rounded-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-uppercase text-body">Обратная связь</h5> 
+                                        <p class="card-text text-muted condensed-text">Напишите нам!</p> 
+                                    </div> 
+                                </div> 
+                            </a> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div>
+        </div>
+        <if(data.settings.footer_enable)>
+            <sticky-footer text=data.settings.footer_text/>
+        </if>
+        <browser-refresh/>
+    </body>
+</html>

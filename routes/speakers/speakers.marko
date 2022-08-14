@@ -1,0 +1,23 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Наша команда - ${data.settings.header}</title>
+    </head>
+    <body>
+        <presentation-nav page="speakers"/>
+        <div class="container">
+            <div class="py-2">
+                <speakers-content fingerprint=data.fingerprint speakers=data.speakers/> 
+            </div>
+        </div>
+        <if(data.settings.footer_enable)>
+            <sticky-footer text=data.settings.footer_text/>
+        </if>
+        <browser-refresh/>
+    </body>
+</html>

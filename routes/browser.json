@@ -1,0 +1,19 @@
+{
+	"dependencies": [
+		"../styles/js-detect.css",
+		"../scripts/js-detect.js",
+		"../scripts/misc.js",
+
+		"jquery/dist/jquery.js",
+		"popper.js/dist/umd/popper.js",
+		"bootstrap/js/dist/util.js",
+		"bootstrap/js/dist/collapse.js",
+		"bootstrap/js/dist/modal.js",
+		"bootstrap/js/dist/dropdown.js",
+		
+		"../scripts/primus.js",
+		
+		"../styles/bootstrap.scss",
+		"../styles/misc.css"
+	]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "marko-express",
+  "version": "0.0.1",
+  "description": "Sample Express-based server app that integrates the marko module for rendering a view",
+  "main": "./server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "browser-refresh server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marko-js-samples/marko-express.git"
+  },
+  "author": "Patrick Steele-idem <pnidem@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marko-js-samples/marko-express/issues"
+  },
+  "homepage": "https://github.com/marko-js-samples/marko-express",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.2",
+    "@lasso/marko-taglib": "^1.0.15",
+    "bootstrap": "^4.3.1",
+    "browser-refresh": "^1.7.3",
+    "browser-refresh-taglib": "^1.1.0",
+    "browser_fingerprint": "^1.0.4",
+    "chart.js": "^2.8.0",
+    "cron": "^1.7.1",
+    "cyrillic-to-translit-js": "^2.2.0",
+    "express": "^4.17.1",
+    "formidable": "^1.2.1",
+    "ics": "^2.16.0",
+    "jquery": "^3.4.1",
+    "lasso": "^3.3.1",
+    "lasso-marko": "^2.4.7",
+    "lasso-sass": "^3.0.0",
+    "marko": "^4.18.13",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.26",
+    "mongodb": "^3.3.2",
+    "popper.js": "^1.15.0",
+    "primus": "^7.3.3",
+    "serve-static": "^1.14.1",
+    "striptags": "^3.1.1",
+    "summernote": "^0.8.12",
+    "ws": "^6.2.1"
+  }
+}

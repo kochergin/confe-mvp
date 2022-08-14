@@ -1,0 +1,27 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Общая информация - ${data.settings.header}</title>
+    </head>
+    <body>
+        <presentation-nav page="info"/>
+        <div class="container">
+            <div class="py-2">
+                <info-content
+                    fingerprint=data.fingerprint
+                    extra_schedule=data.extra_schedule
+                    flights=data.flights
+                    contacts=data.contacts/> 
+            </div>
+        </div>
+        <if(data.settings.footer_enable)>
+            <sticky-footer text=data.settings.footer_text/>
+        </if>
+        <browser-refresh/>
+    </body>
+</html>

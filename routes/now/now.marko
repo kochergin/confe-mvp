@@ -1,0 +1,35 @@
+<lasso-page package-path="./browser.json"/>
+<!doctype html>
+<html lang="ru" id="nojs">
+    <head>
+        <meta charset="utf-8"/> 
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"/> 
+        <title>Сейчас - ${data.settings.header}</title>
+    </head>
+    <body>
+        <presentation-nav page="now"/>
+        <div class="container">
+            <div class="py-2">
+                <now-content
+                    fingerprint=data.fingerprint
+                    current_date_formatted=data.current_date_formatted
+                    current_time=data.current_time
+                    current_time_formatted=data.current_time_formatted
+                    current_utc_offset=data.current_utc_offset
+                    holding_current_event=data.holding_current_event
+                    overtime_formatted=data.overtime_formatted
+                    progress=data.progress
+                    current_event=data.current_event
+                    next_event=data.next_event
+                    current_questions=data.current_questions
+                /> 
+            </div>
+        </div>
+        <if(data.settings.footer_enable)>
+            <sticky-footer text=data.settings.footer_text/>
+        </if>
+        <browser-refresh/>
+    </body>
+</html>

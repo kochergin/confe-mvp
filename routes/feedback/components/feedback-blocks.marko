@@ -1,0 +1,90 @@
+<for|block| of=data.blocks>
+    <if(block.questions)>
+        <div class="border border-primary p-2 mb-2">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <div
+                        class="border-0 p-0 ios-clickable"
+                        data-toggle="collapse"
+                        data-target=`#feedbackBlock${block._id}`>
+                        <p class="text-uppercase m-0">
+                            <strong>Блок ${block.num}<br/>${block.title}</strong>
+                        </p> 
+                    </div> 
+                    <div class="collapse" id=`feedbackBlock${block._id}`>
+                        <form
+                            on-submit("feedbackSendForm", block._id)
+                            key=`feedbackBlockForm${block._id}`>
+                            <if(block.comment)>
+                                <p>
+                                    <small class="text-muted">${block.comment}</small>
+                                </p>
+                            </if> 
+                            <for|question| of=block.questions>
+                                <if(question.num && question.content)>
+                                    <p class="mt-2">${question.num}. ${question.content}</p> 
+                                </if> 
+                                <else-if(question.content)>
+                                    <p class="mt-2">${question.content}</p> 
+                                </else-if> 
+                                <if(question.type == "variants")>
+                                    <for|i, variant| in=question.variants>
+                                        <div class="custom-control custom-radio custom-control-inline small">
+                                            <input
+                                                type="radio"
+                                                id=`b${block._id}_q${
+                                                    question.question_id
+                                                }_${i + 1}`
+                                                name=`q${question.question_id}`
+                                                class="custom-control-input"
+                                                value=i
+                                                checked=(
+                                                    i ==
+                                                    block.answers[
+                                                        question.question_id
+                                                    ]
+                                                )/> 
+                                            <label
+                                                class="custom-control-label"
+                                                for=`b${block._id}_q${
+                                                    question.question_id
+                                                }_${i + 1}`>
+                                                ${variant}
+                                            </label> 
+                                        </div> 
+                                    </for> 
+                                </if> 
+                                <if(question.type == "text")>
+                                    <div class="form-group">
+                                        <textarea
+                                            class="form-control"
+                                            name=`q${question.question_id}`
+                                            rows="3"
+                                            placeholder=(question.placeholder || "Текст")
+                                            key=(
+                                                "b" +
+                                                block._id +
+                                                "_q" +
+                                                question.question_id +
+                                                "_text"
+                                            )>${block.answers[
+                                                question.question_id
+                                            ]}</textarea> 
+                                    </div> 
+                                </if> 
+                            </for> 
+                            <div class="text-right">
+                                <button
+                                    class="btn btn-outline-primary rounded-0"
+                                    type="submit"
+                                    key=`feedbackFormSubmit${block._id}`>
+                                    Сохранить
+                                </button> 
+                            </div> 
+                        </form> 
+                    </div> 
+                </div> 
+            </div> 
+        </div>
+    </if>
+</for>
